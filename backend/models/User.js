@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Define the schema for a User
+
 const userSchema = new mongoose.Schema({
   name: { 
     type: String, 
@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   email: { 
     type: String, 
     required: true, 
-    unique: true // Ensures no two users can register with the same email
+    unique: true 
   },
   password: { 
     type: String, 
@@ -17,11 +17,11 @@ const userSchema = new mongoose.Schema({
   },
   paymentDone: { 
     type: Boolean, 
-    default: false // By default, payment is not done
+    default: false 
   },
   onboardingCompleted: { 
     type: Boolean, 
-    default: false // By default, onboarding is not completed
+    default: false 
   },
   college: { 
     type: String 
@@ -33,9 +33,9 @@ const userSchema = new mongoose.Schema({
     type: String 
   }
 }, { 
-  timestamps: true // Automatically creates 'createdAt' and 'updatedAt' fields
+  timestamps: true 
 });
 
-// Create and export the model so we can use it in other files
+
 const User = mongoose.model('User', userSchema);
 module.exports = User;
