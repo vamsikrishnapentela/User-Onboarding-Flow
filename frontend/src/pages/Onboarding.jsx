@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Typography, Button, Form, Input, InputNumber, message, Spin } from 'antd';
+import { Card, Typography, Button, Form, Input, InputNumber, message, Spin, Steps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 import './pages.css';
@@ -70,7 +70,17 @@ const Onboarding = () => {
 
   return (
     <div className="placeholder-container">
-      <Card className="placeholder-card" style={{ padding: '20px', textAlign: 'left', width: '450px' }}>
+      <Card className="placeholder-card" style={{ width: '600px', padding: '20px', textAlign: 'left' }}>
+        <Steps 
+          current={2} 
+          style={{ marginBottom: '32px' }}
+          items={[
+            { title: 'Sign Up' },
+            { title: 'Payment' },
+            { title: 'Onboarding' }
+          ]} 
+        />
+        
         <Title level={3} style={{ marginTop: 0, textAlign: 'center' }}>Welcome Aboard!</Title>
         <Paragraph style={{ textAlign: 'center', marginBottom: '24px', color: '#666' }}>
           Please complete your profile so we can personalize your experience.

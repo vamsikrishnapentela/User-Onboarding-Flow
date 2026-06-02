@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Typography, Button, message, Spin } from 'antd';
+import { Card, Typography, Button, message, Spin, Steps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 import './pages.css';
@@ -78,7 +78,17 @@ const Payment = () => {
 
   return (
     <div className="placeholder-container">
-      <Card className="placeholder-card" style={{ padding: '40px 20px' }}>
+      <Card className="placeholder-card" style={{ width: '600px', padding: '20px' }}>
+        <Steps 
+          current={1} 
+          style={{ marginBottom: '32px' }}
+          items={[
+            { title: 'Sign Up' },
+            { title: 'Payment' },
+            { title: 'Onboarding' }
+          ]} 
+        />
+        
         <Title level={3} style={{ marginTop: 0 }}>Complete Your Payment</Title>
         
         <Paragraph type="secondary" style={{ marginBottom: '24px', fontSize: '16px' }}>

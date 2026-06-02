@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Typography, Button, Spin } from 'antd';
+import { Card, Typography, Button, Spin, Steps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 import './pages.css';
@@ -58,7 +58,17 @@ const Dashboard = () => {
 
   return (
     <div className="placeholder-container">
-      <Card className="placeholder-card" style={{ width: '500px', textAlign: 'left', padding: '20px' }}>
+      <Card className="placeholder-card" style={{ width: '600px', textAlign: 'left', padding: '20px' }}>
+        <Steps 
+          current={3} 
+          style={{ marginBottom: '32px' }}
+          items={[
+            { title: 'Sign Up' },
+            { title: 'Payment' },
+            { title: 'Onboarding' }
+          ]} 
+        />
+        
         <Title level={2} style={{ color: '#1890ff', marginTop: 0, textAlign: 'center' }}>Welcome, {user.name}!</Title>
         
         <div style={{ background: '#f9f9f9', padding: '20px', borderRadius: '8px', marginBottom: '24px', border: '1px solid #eee' }}>
