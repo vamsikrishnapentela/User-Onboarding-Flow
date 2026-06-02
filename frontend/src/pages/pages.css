@@ -1,0 +1,29 @@
+.placeholder-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+}
+
+.placeholder-card {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+  width: 400px;
+  max-width: 90%;
+}
+
+.placeholder-card h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.placeholder-card p {
+  color: #666;
+  line-height: 1.5;
+}
