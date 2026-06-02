@@ -52,7 +52,8 @@ app.post('/api/register', async (req, res) => {
     const newUser = new User({
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      auditLogs: [{ action: "REGISTERED" }]
     });
 
     await newUser.save();
@@ -126,6 +127,8 @@ app.post('/api/pay', authMiddleware, async (req, res) => {
     
     // 2. Update the user's payment status to true
     user.paymentDone = true;
+    if (!user.auditLogs) user.auditLogs = [];
+    user.auditLogs.push({ action: "PAYMENT_COMPLETED" });
     
     // 3. Save the updated user to MongoDB
     await user.save();
@@ -158,6 +161,8 @@ app.post('/api/onboarding', authMiddleware, async (req, res) => {
     user.graduationYear = graduationYear;
     user.careerGoal = careerGoal;
     user.onboardingCompleted = true; // Mark onboarding as done!
+    if (!user.auditLogs) user.auditLogs = [];
+    user.auditLogs.push({ action: "ONBOARDING_COMPLETED" });
     
     await user.save();
     

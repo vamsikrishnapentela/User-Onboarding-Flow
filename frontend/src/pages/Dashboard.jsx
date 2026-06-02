@@ -78,6 +78,19 @@ const Dashboard = () => {
           <Paragraph style={{ fontSize: '16px' }}><strong>Graduation Year:</strong> {user.graduationYear}</Paragraph>
           <Paragraph style={{ fontSize: '16px' }}><strong>Career Goal:</strong> {user.careerGoal}</Paragraph>
         </div>
+
+        <div style={{ background: '#fffbe6', padding: '20px', borderRadius: '8px', marginBottom: '24px', border: '1px solid #ffe58f' }}>
+          <Title level={5} style={{ marginTop: 0, marginBottom: '16px', color: '#d48806' }}>Security Audit Logs</Title>
+          {user.auditLogs && user.auditLogs.length > 0 ? (
+            user.auditLogs.map((log, index) => (
+              <div key={index} style={{ marginBottom: '8px', fontFamily: 'monospace', fontSize: '13px' }}>
+                <span style={{ color: '#d48806' }}>[{new Date(log.timestamp).toLocaleString()}]</span> <strong>{log.action}</strong>
+              </div>
+            ))
+          ) : (
+            <Paragraph type="secondary">No logs available. (Older accounts might not have logs tracking enabled).</Paragraph>
+          )}
+        </div>
         
         <Button danger type="primary" size="large" block onClick={handleLogout}>
           Logout

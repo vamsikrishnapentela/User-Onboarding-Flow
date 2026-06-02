@@ -31,7 +31,11 @@ const userSchema = new mongoose.Schema({
   },
   careerGoal: { 
     type: String 
-  }
+  },
+  auditLogs: [{
+    action: String,
+    timestamp: { type: Date, default: Date.now }
+  }]
 }, { 
   timestamps: true 
 });
