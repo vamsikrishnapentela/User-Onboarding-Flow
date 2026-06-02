@@ -113,6 +113,31 @@ app.post('/api/login', async (req, res) => {
 });
 
 // ----------------------------------------------------
+// STEP 12: PAYMENT API
+// ----------------------------------------------------
+app.post('/api/pay', authMiddleware, async (req, res) => {
+  try {
+    // 1. Find the user by the ID extracted from the JWT token
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    
+    // 2. Update the user's payment status to true
+    user.paymentDone = true;
+    
+    // 3. Save the updated user to MongoDB
+    await user.save();
+    
+    // 4. Send a success response
+    res.json({ message: 'Payment successful! Proceeding to onboarding.', user });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error during payment processing.', error: error.message });
+  }
+});
+
+// ----------------------------------------------------
 // STEP 7: PROTECTED ROUTE (Requires Token)
 // ----------------------------------------------------
 // Notice the 'authMiddleware' injected before the (req, res) handler
