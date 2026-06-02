@@ -1,13 +1,80 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Form, Input, Button, Card, Typography, message } from 'antd';
+import { useNavigate, Link } from 'react-router-dom';
 import './pages.css';
 
+const { Title } = Typography;
+
 const Register = () => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const onFinish = async (values) => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        message.success('Registration successful! Please log in.');
+        navigate('/login');
+      } else {
+        // This will elegantly catch our duplicate email validation message from the backend
+        message.error(data.message || 'Registration failed.');
+      }
+    } catch (error) {
+      message.error('Network error. Please try again later.');
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="placeholder-container">
-      <div className="placeholder-card">
-        <h2>Register Page</h2>
-        <p>This is a placeholder. We will build the user registration interface here shortly!</p>
-      </div>
+      <Card className="placeholder-card" style={{ textAlign: 'left' }}>
+        <Title level={3} style={{ marginTop: 0, textAlign: 'center' }}>Sign Up</Title>
+        <p style={{ marginBottom: '24px', color: '#666', textAlign: 'center' }}>Create an account to get started.</p>
+        
+        <Form layout="vertical" onFinish={onFinish}>
+          <Form.Item 
+            name="name" 
+            label="Name" 
+            rules={[{ required: true, message: 'Please enter your name' }]}
+          >
+            <Input size="large" placeholder="Your full name" />
+          </Form.Item>
+          
+          <Form.Item 
+            name="email" 
+            label="Email" 
+            rules={[{ required: true, type: 'email', message: 'Please enter a valid email' }]}
+          >
+            <Input size="large" placeholder="you@example.com" />
+          </Form.Item>
+          
+          <Form.Item 
+            name="password" 
+            label="Password" 
+            rules={[{ required: true, message: 'Please enter a password' }]}
+          >
+            <Input.Password size="large" placeholder="Create a strong password" />
+          </Form.Item>
+          
+          <Form.Item style={{ marginBottom: '10px' }}>
+            <Button type="primary" htmlType="submit" size="large" block loading={loading}>
+              Create Account
+            </Button>
+          </Form.Item>
+        </Form>
+        
+        <div style={{ textAlign: 'center', marginTop: '16px' }}>
+          Already have an account? <Link to="/login">Log in here</Link>
+        </div>
+      </Card>
     </div>
   );
 };
