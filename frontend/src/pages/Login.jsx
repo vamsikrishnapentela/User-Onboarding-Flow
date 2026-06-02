@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Card, Typography, message } from 'antd';
 import { useNavigate, Link } from 'react-router-dom';
+import { API_URL } from '../config';
 import './pages.css';
 
 const { Title } = Typography;
@@ -12,7 +13,7 @@ const Login = () => {
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
+      const response = await fetch(`${API_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),

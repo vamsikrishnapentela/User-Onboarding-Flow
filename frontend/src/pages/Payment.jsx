@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Typography, Button, message, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../config';
 import './pages.css';
 
 const { Title, Paragraph } = Typography;
@@ -15,7 +16,7 @@ const Payment = () => {
     const checkPaymentStatus = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch('http://localhost:5000/api/me', {
+        const response = await fetch(`${API_URL}/api/me`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {
@@ -49,7 +50,7 @@ const Payment = () => {
       const token = localStorage.getItem('token');
       
       // 2. Call our secure payment API
-      const response = await fetch('http://localhost:5000/api/pay', {
+      const response = await fetch(`${API_URL}/api/pay`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

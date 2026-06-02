@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Typography, Button, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../config';
 import './pages.css';
 
 const { Title, Paragraph } = Typography;
@@ -15,7 +16,7 @@ const Dashboard = () => {
     const checkAccess = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch('http://localhost:5000/api/me', {
+        const response = await fetch(`${API_URL}/api/me`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         

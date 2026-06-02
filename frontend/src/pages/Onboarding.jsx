@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Typography, Button, Form, Input, InputNumber, message, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../config';
 import './pages.css';
 
 const { Title, Paragraph } = Typography;
@@ -15,7 +16,7 @@ const Onboarding = () => {
     const checkAccess = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch('http://localhost:5000/api/me', {
+        const response = await fetch(`${API_URL}/api/me`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {
@@ -41,7 +42,7 @@ const Onboarding = () => {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/onboarding', {
+      const response = await fetch(`${API_URL}/api/onboarding`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
