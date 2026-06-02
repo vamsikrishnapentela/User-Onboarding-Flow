@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Spin } from 'antd';
+import { Card, Typography, Button, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import './pages.css';
 
+const { Title, Paragraph } = Typography;
+
 const Dashboard = () => {
+  const [user, setUser] = useState(null);
   const [pageLoading, setPageLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -25,10 +28,13 @@ const Dashboard = () => {
             // Paid but didn't finish onboarding? Force redirect to onboarding!
             navigate('/onboarding', { replace: true });
           } else {
-            // Everything is done, allow them to view the dashboard
+          
+            setUser(data);
             setPageLoading(false);
           }
         } else {
+          // Token is likely invalid or expired
+          localStorage.removeItem('token');
           navigate('/login', { replace: true });
         }
       } catch (error) {
@@ -38,16 +44,34 @@ const Dashboard = () => {
     checkAccess();
   }, [navigate]);
 
-  if (pageLoading) {
+  const handleLogout = () => {
+    
+    localStorage.removeItem('token');
+    
+    navigate('/login', { replace: true });
+  };
+
+  if (pageLoading || !user) {
     return <div className="placeholder-container"><Spin size="large" /></div>;
   }
 
   return (
     <div className="placeholder-container">
-      <div className="placeholder-card">
-        <h2>Welcome Dashboard</h2>
-        <p>This is a placeholder where the final user data will be proudly displayed.</p>
-      </div>
+      <Card className="placeholder-card" style={{ width: '500px', textAlign: 'left', padding: '20px' }}>
+        <Title level={2} style={{ color: '#1890ff', marginTop: 0, textAlign: 'center' }}>Welcome, {user.name}!</Title>
+        
+        <div style={{ background: '#f9f9f9', padding: '20px', borderRadius: '8px', marginBottom: '24px', border: '1px solid #eee' }}>
+          <Title level={5} style={{ marginTop: 0, marginBottom: '16px' }}>Your Profile</Title>
+          <Paragraph style={{ fontSize: '16px' }}><strong>Email:</strong> {user.email}</Paragraph>
+          <Paragraph style={{ fontSize: '16px' }}><strong>College:</strong> {user.college}</Paragraph>
+          <Paragraph style={{ fontSize: '16px' }}><strong>Graduation Year:</strong> {user.graduationYear}</Paragraph>
+          <Paragraph style={{ fontSize: '16px' }}><strong>Career Goal:</strong> {user.careerGoal}</Paragraph>
+        </div>
+        
+        <Button danger type="primary" size="large" block onClick={handleLogout}>
+          Logout
+        </Button>
+      </Card>
     </div>
   );
 };
