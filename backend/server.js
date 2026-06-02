@@ -58,8 +58,22 @@ app.post('/api/register', async (req, res) => {
 
     await newUser.save();
 
-    // 5. Send Success Response
-    res.status(201).json({ message: 'User registered successfully!' });
+    // 5. Create and send JWT so they are automatically logged in
+    const payload = {
+      user: {
+        id: newUser._id
+      }
+    };
+
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' },
+      (err, token) => {
+        if (err) throw err;
+        res.status(201).json({ token, message: 'User registered and logged in successfully!' });
+      }
+    );
 
   } catch (error) {
     res.status(500).json({ message: 'Server error during registration.', error: error.message });

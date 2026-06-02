@@ -22,8 +22,11 @@ const Register = () => {
       const data = await response.json();
       
       if (response.ok) {
-        message.success('Registration successful! Please log in.');
-        navigate('/login');
+        
+        localStorage.setItem('token', data.token);
+        message.success('Account created! Welcome aboard.');
+        
+        navigate('/payment');
       } else {
         // This will elegantly catch our duplicate email validation message from the backend
         message.error(data.message || 'Registration failed.');
