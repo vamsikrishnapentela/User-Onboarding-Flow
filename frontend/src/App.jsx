@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Payment from './pages/Payment';
 import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
+import Admin from './pages/Admin';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -33,6 +34,12 @@ function App() {
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <Admin />
           </ProtectedRoute>
         } />
         

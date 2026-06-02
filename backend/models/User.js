@@ -35,7 +35,11 @@ const userSchema = new mongoose.Schema({
   auditLogs: [{
     action: String,
     timestamp: { type: Date, default: Date.now }
-  }]
+  }],
+  isAdmin: { 
+    type: Boolean, 
+    default: false 
+  }
 }, { 
   timestamps: true 
 });

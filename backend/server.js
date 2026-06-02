@@ -118,8 +118,8 @@ app.post('/api/login', async (req, res) => {
       { expiresIn: '1h' },
       (err, token) => {
         if (err) throw err;
-        // Return the token so the frontend can save it
-        res.json({ token, message: 'Logged in successfully!' });
+        // Return the token AND the admin flag so the frontend knows where to route
+        res.json({ token, isAdmin: user.isAdmin, message: 'Logged in successfully!' });
       }
     );
   } catch (error) {
@@ -198,6 +198,25 @@ app.get('/api/me', authMiddleware, async (req, res) => {
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: 'Server error fetching user.', error: error.message });
+  }
+});
+
+// ----------------------------------------------------
+// ADMIN ROUTE
+// ----------------------------------------------------
+app.get('/api/admin/users', authMiddleware, async (req, res) => {
+  try {
+    // 1. Verify that the requesting user is actually the Admin
+    const requestingUser = await User.findById(req.user.id);
+    if (!requestingUser || requestingUser.email !== 'admin@test.com') {
+      return res.status(403).json({ message: 'Forbidden: Admin access strictly required.' });
+    }
+
+    // 2. Return all users EXCEPT the admin account itself so stats are accurate
+    const users = await User.find({ email: { $ne: 'admin@test.com' } }).select('-password').sort({ createdAt: -1 });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error fetching admin data.', error: error.message });
   }
 });
 

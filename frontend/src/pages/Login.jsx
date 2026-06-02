@@ -26,8 +26,14 @@ const Login = () => {
         localStorage.setItem('token', data.token);
         
         message.success('Welcome back!');
-        // Redirect to the dashboard (our route guards will handle redirecting if payment/onboarding is missing)
-        navigate('/dashboard'); 
+        
+        // Smart Routing: Check if this user is an admin
+        if (data.isAdmin) {
+          navigate('/admin');
+        } else {
+          // Redirect to the dashboard (our route guards will handle redirecting if payment/onboarding is missing)
+          navigate('/dashboard'); 
+        }
       } else {
         message.error(data.message || 'Login failed. Please check your credentials.');
       }
