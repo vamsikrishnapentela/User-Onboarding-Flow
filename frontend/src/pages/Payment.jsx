@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Card, Typography, Button, message } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Card, Typography, Button, message, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import './pages.css';
 
@@ -7,7 +7,40 @@ const { Title, Paragraph } = Typography;
 
 const Payment = () => {
   const [loading, setLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Smart Page Rule: Once they click "Pay", they shouldn't be forced to see the payment page again.
+    const checkPaymentStatus = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch('http://localhost:5000/api/me', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.paymentDone) {
+            // If they already paid, push them to onboarding (or dashboard if fully done)
+            if (data.onboardingCompleted) {
+              navigate('/dashboard', { replace: true });
+            } else {
+              navigate('/onboarding', { replace: true });
+            }
+          } else {
+            // Not paid yet, show the page
+            setPageLoading(false);
+          }
+        } else {
+           setPageLoading(false);
+        }
+      } catch (error) {
+         setPageLoading(false);
+      }
+    };
+    
+    checkPaymentStatus();
+  }, [navigate]);
 
   const handleFakePayment = async () => {
     setLoading(true);
@@ -37,6 +70,10 @@ const Payment = () => {
     }
     setLoading(false);
   };
+
+  if (pageLoading) {
+    return <div className="placeholder-container"><Spin size="large" /></div>;
+  }
 
   return (
     <div className="placeholder-container">

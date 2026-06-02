@@ -138,6 +138,36 @@ app.post('/api/pay', authMiddleware, async (req, res) => {
 });
 
 // ----------------------------------------------------
+// STEP 16: ONBOARDING API
+// ----------------------------------------------------
+app.post('/api/onboarding', authMiddleware, async (req, res) => {
+  const { college, graduationYear, careerGoal } = req.body;
+  
+  if (!college || !graduationYear || !careerGoal) {
+    return res.status(400).json({ message: 'Please provide all onboarding fields.' });
+  }
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    
+    // Update the user's data
+    user.college = college;
+    user.graduationYear = graduationYear;
+    user.careerGoal = careerGoal;
+    user.onboardingCompleted = true; // Mark onboarding as done!
+    
+    await user.save();
+    
+    res.json({ message: 'Onboarding complete!', user });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error during onboarding.', error: error.message });
+  }
+});
+
+// ----------------------------------------------------
 // STEP 7: PROTECTED ROUTE (Requires Token)
 // ----------------------------------------------------
 // Notice the 'authMiddleware' injected before the (req, res) handler
