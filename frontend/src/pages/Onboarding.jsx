@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Spin } from 'antd';
+import { Card, Typography, Button, Form, Input, InputNumber, message, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import './pages.css';
 
+const { Title, Paragraph } = Typography;
+
 const Onboarding = () => {
   const [pageLoading, setPageLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,16 +37,76 @@ const Onboarding = () => {
     checkAccess();
   }, [navigate]);
 
+  const onFinish = async (values) => {
+    setSubmitting(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/onboarding', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
+        body: JSON.stringify(values),
+      });
+      
+      if (response.ok) {
+        message.success('Onboarding complete!');
+        navigate('/dashboard');
+      } else {
+        const data = await response.json();
+        message.error(data.message || 'Failed to save your details.');
+      }
+    } catch (error) {
+      message.error('Network error. Please try again.');
+    }
+    setSubmitting(false);
+  };
+
   if (pageLoading) {
     return <div className="placeholder-container"><Spin size="large" /></div>;
   }
 
   return (
     <div className="placeholder-container">
-      <div className="placeholder-card">
-        <h2>Onboarding Page</h2>
-        <p>This is a placeholder for the form where users will answer questions about their college and career goals.</p>
-      </div>
+      <Card className="placeholder-card" style={{ padding: '20px', textAlign: 'left', width: '450px' }}>
+        <Title level={3} style={{ marginTop: 0, textAlign: 'center' }}>Welcome Aboard!</Title>
+        <Paragraph style={{ textAlign: 'center', marginBottom: '24px', color: '#666' }}>
+          Please complete your profile so we can personalize your experience.
+        </Paragraph>
+        
+        <Form layout="vertical" onFinish={onFinish}>
+          <Form.Item 
+            name="college" 
+            label="College Name" 
+            rules={[{ required: true, message: 'Please enter your college name' }]}
+          >
+            <Input size="large" placeholder="e.g., Stanford University" />
+          </Form.Item>
+          
+          <Form.Item 
+            name="graduationYear" 
+            label="Graduation Year" 
+            rules={[{ required: true, message: 'Please enter your graduation year' }]}
+          >
+            <InputNumber size="large" style={{ width: '100%' }} placeholder="e.g., 2024" />
+          </Form.Item>
+          
+          <Form.Item 
+            name="careerGoal" 
+            label="Career Goal" 
+            rules={[{ required: true, message: 'Please tell us your career goal' }]}
+          >
+            <Input.TextArea size="large" rows={3} placeholder="e.g., I want to become a Full Stack Developer..." />
+          </Form.Item>
+          
+          <Form.Item style={{ marginBottom: '10px' }}>
+            <Button type="primary" htmlType="submit" size="large" block loading={submitting}>
+              Complete Onboarding
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
     </div>
   );
 };
