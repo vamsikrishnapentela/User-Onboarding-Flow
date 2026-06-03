@@ -12,7 +12,6 @@ const Onboarding = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Smart Page Rule: User cannot access onboarding unless payment is done.
     const checkAccess = async () => {
       const token = localStorage.getItem('token');
       try {
@@ -22,10 +21,8 @@ const Onboarding = () => {
         if (response.ok) {
           const data = await response.json();
           if (!data.paymentDone) {
-            // Block access, send back to payment
             navigate('/payment', { replace: true }); 
           } else if (data.onboardingCompleted) {
-            // Already did onboarding, skip this page
             navigate('/dashboard', { replace: true }); 
           } else {
              setPageLoading(false);

@@ -12,8 +12,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Smart Page Rule: Dashboard checks if the user has completed all previous steps
-    const checkAccess = async () => {
+    // Fetch latest user state to ensure they haven't skipped any required onboarding steps
+    const fetchUserData = async () => {
       const token = localStorage.getItem('token');
       try {
         const response = await fetch(`${API_URL}/api/me`, {
@@ -21,20 +21,18 @@ const Dashboard = () => {
         });
         
         if (response.ok) {
-          const data = await response.json();
-          if (!data.paymentDone) {
-            // Not paid yet? Force redirect to payment!
+          const userData = await response.json();
+          
+          if (!userData.paymentDone) {
             navigate('/payment', { replace: true });
-          } else if (!data.onboardingCompleted) {
-            // Paid but didn't finish onboarding? Force redirect to onboarding!
+          } else if (!userData.onboardingCompleted) {
             navigate('/onboarding', { replace: true });
           } else {
-          
-            setUser(data);
+            // User has completed everything, safe to show the dashboard
+            setUser(userData);
             setPageLoading(false);
           }
         } else {
-          // Token is likely invalid or expired
           localStorage.removeItem('token');
           navigate('/login', { replace: true });
         }
@@ -42,13 +40,11 @@ const Dashboard = () => {
         navigate('/login', { replace: true });
       }
     };
-    checkAccess();
+    fetchUserData();
   }, [navigate]);
 
   const handleLogout = () => {
-    
     localStorage.removeItem('token');
-    
     navigate('/login', { replace: true });
   };
 
@@ -88,7 +84,7 @@ const Dashboard = () => {
               </div>
             ))
           ) : (
-            <Paragraph type="secondary">No logs available. (Older accounts might not have logs tracking enabled).</Paragraph>
+            <Paragraph type="secondary">No logs available.</Paragraph>
           )}
         </div>
         

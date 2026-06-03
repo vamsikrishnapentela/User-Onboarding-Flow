@@ -12,7 +12,6 @@ const Payment = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Smart Page Rule: Once they click "Pay", they shouldn't be forced to see the payment page again.
     const checkPaymentStatus = async () => {
       const token = localStorage.getItem('token');
       try {
@@ -22,14 +21,12 @@ const Payment = () => {
         if (response.ok) {
           const data = await response.json();
           if (data.paymentDone) {
-            // If they already paid, push them to onboarding (or dashboard if fully done)
             if (data.onboardingCompleted) {
               navigate('/dashboard', { replace: true });
             } else {
               navigate('/onboarding', { replace: true });
             }
           } else {
-            // Not paid yet, show the page
             setPageLoading(false);
           }
         } else {
@@ -46,19 +43,16 @@ const Payment = () => {
   const handleFakePayment = async () => {
     setLoading(true);
     try {
-      // 1. Grab the JWT token from storage
       const token = localStorage.getItem('token');
       
-      // 2. Call our secure payment API
       const response = await fetch(`${API_URL}/api/pay`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Provide the token to prove we are logged in
+          'Authorization': `Bearer ${token}`
         },
       });
       
-      // 3. Handle the response
       if (response.ok) {
         message.success('Payment successful! Proceeding to Onboarding...');
         navigate('/onboarding');

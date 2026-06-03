@@ -29,7 +29,6 @@ const Admin = () => {
         const data = await response.json();
         setUsers(data);
       } else if (response.status === 403) {
-        // Kick unauthorized users back to the dashboard!
         message.error('Access Denied: You must be an admin to view this page.');
         window.location.href = '/dashboard';
       } else {
@@ -60,13 +59,11 @@ const Admin = () => {
     setSelectedUser(null);
   };
 
-  // 1. Dashboard Stats
   const totalUsers = users.length;
   const paidUsers = users.filter(u => u.paymentDone).length;
   const completedUsers = users.filter(u => u.onboardingCompleted).length;
   const conversionRate = totalUsers === 0 ? 0 : Math.round((completedUsers / totalUsers) * 100);
 
-  // 2. Users Table Logic
   const filteredUsers = users.filter(user => {
     const matchesSearch = 
       (user.name && user.name.toLowerCase().includes(searchText.toLowerCase())) ||
@@ -90,7 +87,6 @@ const Admin = () => {
     { title: 'Action', key: 'action', render: (_, r) => <a onClick={() => showModal(r)}>View</a> }
   ];
 
-  // 3. Activity Feed Logic
   const activities = [];
   users.forEach(u => {
     if (u.auditLogs) {

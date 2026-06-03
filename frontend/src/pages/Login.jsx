@@ -22,16 +22,12 @@ const Login = () => {
       const data = await response.json();
       
       if (response.ok) {
-        // Securely store the JWT provided by our backend
         localStorage.setItem('token', data.token);
-        
         message.success('Welcome back!');
         
-        // Smart Routing: Check if this user is an admin
         if (data.isAdmin) {
           navigate('/admin');
         } else {
-          // Redirect to the dashboard (our route guards will handle redirecting if payment/onboarding is missing)
           navigate('/dashboard'); 
         }
       } else {

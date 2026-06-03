@@ -3,6 +3,7 @@
 A full-stack web application that takes a new user through a seamless, smart, and secure onboarding experience. Built with the MERN stack (MongoDB, Express, React, Node.js).
 
 ## 🚀 Live Demo
+- **Video Walkthrough:** https://drive.google.com/file/d/16XHMljznUuKyY8UKWOLK0UFMXHsUKCEr/view?usp=sharing
 - **Frontend (Vercel):** https://user-onboarding-flow.vercel.app/
 - **Backend (Render):** https://user-onboarding-flow.onrender.com/
 
